@@ -33,25 +33,37 @@ class HomeController extends Controller
         return view('home');
     }
 
+    /**
+    * Get order page
+    *
+    *@param HTTP Request $request
+    *@return response
+    */
     public function getOrderPage(){
 
+        //get all types and attach to response
         $types = PizzaType::all();
-        $pizzas = Pizza::all();
-        $sizes = Size::all();
-        $toppings = Topping::all();
 
-        return view('pages.order_page',compact('pizzas','types', 'toppings'));
+        return view('pages.order_page',compact('types'));
 
     }
 
+    /**
+    * Get pizzas
+    *
+    *@param HTTP Request $request
+    *@return response
+    */
     public function getPizza(Request $request){
 
+        //validation
         $rules = ['id' => 'required|numeric'];
 
         $this->validate($request, $rules);
 
         $id = $request->id;
 
+        //fetch and return pizzas
         $pizzas = Pizza::orderBy('name', 'desc')
             ->where('pizza_type_id', $id)
             ->get();
@@ -59,17 +71,23 @@ class HomeController extends Controller
         return response()->json($pizzas);
     }
 
+    /**
+    * Get Pizza Size and Price
+    *
+    *@param HTTP Request $request
+    *@return response
+    */
     public function getSizePrice(Request $request){
 
+        //validation
         $rules = ['id' => 'required|numeric'];
 
         $this->validate($request, $rules);
 
         $id = $request->id;
 
+        //fetch and return pizza size and price
         $pizza = Pizza::find($id);
-
-
 
         $sizePrice = $pizza->sizePrice;
 
@@ -86,18 +104,25 @@ class HomeController extends Controller
 
     }
 
+     /**
+    * Get Topping Price
+    *
+    *@param HTTP Request $request
+    *@return response
+    */
     public function getToppingPrice(Request $request){
-        
+
+        //validation
         $rules = ['id' => 'required|numeric'];
 
         $this->validate($request, $rules);
 
         $id = $request->id;
 
-        //price
+        //fetch and return topping size and price
         $sizePrice = ToppingSizePrice::where('size_id', $id)->get();
 
-        //get size
+        //get size and toppings add to collection
         $size = [];
         $toppings = [];
         

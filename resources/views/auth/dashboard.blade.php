@@ -75,9 +75,11 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+			//initialize datatables
 			$('#order-table').DataTable();
 		} );
 
+		//fetch combinations
 		function getCombinations(id){
 			$('#combinations-modal').modal('show');
 			$.ajax({
@@ -86,6 +88,7 @@
 				data:{'id':id},
 			}).done(function(data){
 
+				//fetch response and display
 				var topping = Object.values(data);
 
 				for (var i = 0; i < topping.length - 1; i++) {

@@ -151,8 +151,10 @@
 
 		//fetch pizza size price
 		$('#pizza-items').on('change',function(){
-			$('#hidden-items').removeClass('d-none');
 			var id = $(this).val();
+			//toggle selection
+			$('#hidden-items').removeClass('d-none');
+			//reset selections
 			$('.reset-input').val('');
 			$('.sub-selection').empty();
 			$('.first-item').remove()
@@ -163,6 +165,7 @@
 				data:{'id':id},
 			}).done(function(data){
 
+				//fetch response and display
 				var sizePrice = Object.values(data);
 				
 				for (var i = 0; i < sizePrice.length; i++){
@@ -181,8 +184,9 @@
 
 		});
 
+		//get price by size
 		$('#size-type').on('change',function(){
-
+			//reset selections
 			$('.reset-input').val('');
 			$('#total').empty();
 			$('#pizza-total').empty();
@@ -191,6 +195,7 @@
 			var oldPrice = $('.old-price');
 			var newPrice = [];
 
+			//filter price by size
 			switch(id){
 				case '0':
 
@@ -258,7 +263,6 @@
 
 			//fetch toppings price
 			var sizeType = $('#size-type option[value="'+id+'"]').text();
-			// console.log(sizeType);
 			var sizeId = parseInt(id) + 1;
 			if(sizeType == 'Whole'){
 				getToppings(sizeId);
@@ -275,14 +279,16 @@
 	//fetch toppings
 	function getToppings(id){
 
+		//reset selections
 		$('#topping-items').empty();
-
+		//fetch topping size and price
 		$.ajax({
 			url:'get-topping-price',
 			method:'GET',
 			data:{'id':id},
 		}).done(function(data){
 			
+			//fetch response and display
 			var sizePrice = Object.values(data);
 
 			for(var i = 0; i < sizePrice.length; i++){
@@ -291,33 +297,32 @@
 				$('#topping-items').append(topping);			
 				
 			}
-
-
-
 		});
 	}
 
 
-	});//end doc ready
+});//end doc ready
 
+
+//set the price for inputs and display
 function setPrice(price){
-	console.log(price);
 
 	var formatprice = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(price);
-	// isaylo ja sa set price.
 	$('#pizza-total').text(formatprice);
 	$('#pizza-price').val(price);
 	$('#total').text(formatprice);
 	$('#total-price').val(price);
 }
 
+//get array toppings sum
 function getToppingsSum(total, num){
 	return total + num;
-	// return total;
 }
 
+//get subtotal
 function getSubtotal(id){
 
+	//fetch all selected toppings and calculate the price accordinggly
 	var checked = $('.toppings-'+id+'').is(':checked');
 	var price = parseInt($('.topping-price-'+id+'').val());
 	var list = $('.topping-class:checkbox:checked');
@@ -326,7 +331,10 @@ function getSubtotal(id){
 
 	var choices = [];
 
+	//filter if checkbox has been checked
 	if(checked){
+
+		//calculate the value
 
 		for(var i = 0; i < list.length; i++){
 			choices.push(price);
@@ -351,6 +359,7 @@ function getSubtotal(id){
 
 	}else{
 
+		//unchecked. Update new total price accordingly
 		var newcost = $('#toppings-cost').val() - price;
 
 		$('#toppings-cost').val(newcost);

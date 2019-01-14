@@ -12,8 +12,14 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+	/**
+	* Add new order
+	*
+	*@param HTTP Request $request
+	*@return response
+	*/
 	public function store(Request $request){
-
+		//request validation
 		$rules = [
 			'pizzatype' => 'required|numeric',
 			'pizzaitems' => 'required|numeric',//op
@@ -78,6 +84,8 @@ class OrderController extends Controller
 
 			$order->save();
 
+
+			//send confirmation email
 			$email = $order->email;
 			$name = $order->name;
 			$address = $order->address;
@@ -110,7 +118,7 @@ class OrderController extends Controller
 				$message->from('no-reply@pizzaza.com','Pizzaza');
 			});
 				
-
+			//return to previous page with message
 			Session::flash('success_msg', 'Order successfull.');
 
 			return redirect()->back();
